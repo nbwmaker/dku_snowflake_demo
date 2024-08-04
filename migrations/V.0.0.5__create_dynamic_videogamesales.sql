@@ -8,5 +8,5 @@ SELECT
     a."Platform" as platform,
     LISTAGG(a."Year", ', ') WITHIN GROUP (ORDER BY a."Year" ASC) as years_active,
     SUM(a."SUM(GLOBAL_SALES)") as global_sales
-FROM kaggle_test.videogamesales a
+FROM {{schema_name}}.videogamesales a
 GROUP BY a."Platform";
