@@ -1,3 +1,5 @@
+USE SCHEMA DKU_DEMO.{{schema_name}}
+
 --Creating and adding a row access policy for dynamic_videogamesales
 CREATE OR REPLACE ROW ACCESS POLICY videogame_company_restriction
 AS (platform varchar) RETURNS BOOLEAN ->
