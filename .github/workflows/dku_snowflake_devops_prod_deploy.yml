@@ -1,10 +1,10 @@
-name: dku_snowflake_devops_dev_deploy
+name: dku_snowflake_devops_prod_deploy
 
 # Controls when the action will run. 
 on:
   push:
     branches:
-      - dev
+      - main
     paths:
       - 'migrations/**'
 
@@ -40,4 +40,4 @@ jobs:
           pip install schemachange
           
           echo "Step 2: Running schemachange"
-          schemachange -f $GITHUB_WORKSPACE/migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table --vars '{"schema_name": "KAGGLE_DEV"}'
+          schemachange -f $GITHUB_WORKSPACE/migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table --vars '{"schema_name": "KAGGLE_PROD"}'
