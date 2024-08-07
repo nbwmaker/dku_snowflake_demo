@@ -1,5 +1,6 @@
 import datetime
 import os
+# import sys #REMOVE
 
 import snowflake.connector
 from snowflake.connector import DictCursor
@@ -39,12 +40,12 @@ conn = connect()
 connector = Blueprint('connector', __name__)
 
 ## Sales per platform by company for the year
-@snowpark.route('/company/<company_name>/yearly_sales/<year>')
+@connector.route('/company/<company_name>/yearly_sales/<year>')
 def company_yearly_sales(company_name, year):
     company_to_platform_map = {
-        "nintendo" : ['3DS', 'DS', 'GB', 'GBA', 'N64', 'NES', 'SNES', 'Wii', 'WiiU'],
-        "sony" : ['PS', 'PS2', 'PS3', 'PS4', 'PSV', 'PSP'],
-        "microsoft" : ['PC', 'XB', 'X360', 'XOne']
+        "nintendo" : ('3DS', 'DS', 'GB', 'GBA', 'N64', 'NES', 'SNES', 'Wii', 'WiiU'),
+        "sony" : ('PS', 'PS2', 'PS3', 'PS4', 'PSV', 'PSP'),
+        "microsoft" : ('PC', 'XB', 'X360', 'XOne')
     }
     try:
         company_to_platform_map[company_name]
@@ -56,13 +57,18 @@ def company_yearly_sales(company_name, year):
         abort(400, "Invalid year.")
     sql_string = '''
         SELECT *
-        FROM kaggle_dev.videogamesales
-        WHERE "Platform" IN '{platform_list}'
-        AND "Year" = '{year}';
+        FROM kaggle_datasets.videogamesales
+        WHERE PLATFORM IN {platform_list}
+        AND YEAR = {year}
     '''
     sql = sql_string.format(year=year_int, platform_list = company_to_platform_map[company_name])
+    # print("sanity check", file=sys.stderr)
+    # print(sql, file=sys.stderr)
     try:
         res = conn.cursor(DictCursor).execute(sql)
-        return make_response(jsonify(res.fetchall()))
+        res_to_return = res.fetchall()
+        # print("sanity check2", file=sys.stderr)
+        # print(res_to_return, file=sys.stderr)
+        return make_response(jsonify(res_to_return))
     except:
         abort(500, "Error reading from Snowflake.")

@@ -1,5 +1,6 @@
 import datetime
 import os
+import sys #REMOVE
 
 from flask import Blueprint, request, abort, make_response, jsonify
 
@@ -42,9 +43,9 @@ snowpark = Blueprint('snowpark', __name__)
 @snowpark.route('/company/<company_name>/yearly_sales/<year>')
 def company_yearly_sales(company_name, year):
     company_to_platform_map = {
-        "nintendo" : ['3DS', 'DS', 'GB', 'GBA', 'N64', 'NES', 'SNES', 'Wii', 'WiiU'],
-        "sony" : ['PS', 'PS2', 'PS3', 'PS4', 'PSV', 'PSP'],
-        "microsoft" : ['PC', 'XB', 'X360', 'XOne']
+        "nintendo" : ('3DS', 'DS', 'GB', 'GBA', 'N64', 'NES', 'SNES', 'Wii', 'WiiU'),
+        "sony" : ('PS', 'PS2', 'PS3', 'PS4', 'PSV', 'PSP'),
+        "microsoft" : ('PC', 'XB', 'X360', 'XOne')
     }
     try:
         company_to_platform_map[company_name]
@@ -55,9 +56,15 @@ def company_yearly_sales(company_name, year):
     except:
         abort(400, "Invalid year.")
     try:
-        df = session.table('kaggle_dev.videogamesales') \
-            .filter(f.col('"Platform"').in_(company_to_platform_map[company_name])) \
-            .filter(f.col('"Year"') == year_int)
+        df = session.table('KAGGLE_DATASETS.videogamesales')
+        # print("session", file=sys.stderr)
+        # print(df.show(), file=sys.stderr)
+        df = df.filter(f.col('PLATFORM').in_(company_to_platform_map[company_name]))
+        # print("platfilter", file=sys.stderr)
+        # print(df.show(), file=sys.stderr)
+        df = df.filter(f.col('YEAR') == year_int)
+        # print("yearfilter", file=sys.stderr)
+        # print(df.show(), file=sys.stderr)
         return make_response(jsonify([x.as_dict() for x in df.to_local_iterator()]))
     except:
         abort(500, "Error reading from Snowflake.")

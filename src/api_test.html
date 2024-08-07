@@ -49,11 +49,12 @@
             d = document.getElementById("frm2").elements;
             company_name = d[0].value
             year = d[1].value
-            apiurl = "/" + method + "/company/" + clerkid + "/yearly_sales/" + year
+            apiurl = "/" + method + "/company/" + company_name + "/yearly_sales/" + year
             document.getElementById("output").innerHTML = "Getting Data";
             fetch(apiurl)
                 .then(response => response.json())
                 .then(data => document.getElementById("output").innerHTML = "<pre>" + JSON.stringify(data, null, "  ") + "</pre>")
+                // .then(data => document.getElementById("output").innerHTML = "<pre>" + data + "</pre>")
                 .catch(error => document.getElementById("output").innerHTML = "There was an error: " + error)
         }
 
