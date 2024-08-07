@@ -8,7 +8,7 @@ RUNTIME_VERSION = 3.8
 HANDLER = 'load_kaggle_dataset'
 EXTERNAL_ACCESS_INTEGRATIONS = (kaggle_api_access_integration)
 PACKAGES = ('snowflake-snowpark-python', 'requests', 'pandas')
-SECRETS = ('cred' = public.kaggle_central_auth)
+SECRETS = ('cred' = central_db.public.kaggle_central_auth)
 AS
 $$
 import _snowflake
