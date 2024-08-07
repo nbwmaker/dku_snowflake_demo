@@ -1,4 +1,4 @@
-USE SCHEMA DKU_DEMO.{{schema_name}};
+USE SCHEMA {{db_name}}.{{schema_name}};
 
 --Creating and adding a row access policy for dynamic_videogamesales
 CREATE OR REPLACE ROW ACCESS POLICY videogame_company_restriction

@@ -1,5 +1,5 @@
 --creating a dynamic table on the videogamesales dataset we created with load_kaggle_dataset
-USE SCHEMA DKU_DEMO.{{schema_name}};
+USE SCHEMA {{db_name}}.{{schema_name}};
 CREATE OR REPLACE DYNAMIC TABLE dynamic_videogamesales
     LAG='DOWNSTREAM' 
     WAREHOUSE=XSMALL_WH

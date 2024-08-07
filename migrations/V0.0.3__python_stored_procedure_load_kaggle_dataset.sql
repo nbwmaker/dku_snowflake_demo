@@ -1,5 +1,5 @@
 --Creating Python stored procedure for Kaggle dataset ETL
-USE SCHEMA DKU_DEMO.{{schema_name}};
+USE SCHEMA {{db_name}}.{{schema_name}};
 
 CREATE OR REPLACE PROCEDURE load_kaggle_dataset(dataset_owner STRING, dataset_name STRING, transform OBJECT)
 RETURNS INT

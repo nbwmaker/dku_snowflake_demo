@@ -1,7 +1,7 @@
 --Creating the base database, schema, and warehouse environment if they do not already exist
-CREATE DATABASE IF NOT EXISTS DKU_DEMO;
-CREATE SCHEMA IF NOT EXISTS DKU_DEMO.{{schema_name}};
-USE SCHEMA DKU_DEMO.{{schema_name}};
+CREATE DATABASE IF NOT EXISTS {{db_name}};
+CREATE SCHEMA IF NOT EXISTS {{db_name}}.{{schema_name}};
+USE SCHEMA {{db_name}}.{{schema_name}};
 
 CREATE WAREHOUSE IF NOT EXISTS XSMALL_WH
     WITH WAREHOUSE_SIZE = 'XSMALL'

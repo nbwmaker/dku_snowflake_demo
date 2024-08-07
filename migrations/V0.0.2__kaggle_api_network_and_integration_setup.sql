@@ -1,5 +1,5 @@
 -- Establish network and integration dependencies to allow Kaggle API access.
-USE SCHEMA DKU_DEMO.{{schema_name}};
+USE SCHEMA {{db_name}}.{{schema_name}};
 CREATE OR REPLACE NETWORK RULE kaggle_api_network_rule
     MODE = EGRESS
     TYPE = HOST_PORT
