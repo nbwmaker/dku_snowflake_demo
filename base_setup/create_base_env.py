@@ -36,23 +36,23 @@ sf_warehouse = os.getenv('SF_WAREHOUSE')
 conn = connect()
 
 # Creating the central DB used for schemachange, warehouse, and Kaggle secret storage ======
-conn.cursor().execute(f"CREATE DATABASE IF NOT EXISTS #{sf_database}")
-conn.cursor().execute(f"USE SCHEMA #{sf_database}.PUBLIC")
-conn.cursor().execute(f"CREATE WAREHOUSE IF NOT EXISTS #{sf_warehouse} \
+conn.cursor().execute(f"CREATE DATABASE IF NOT EXISTS {sf_database}")
+conn.cursor().execute(f"USE SCHEMA {sf_database}.PUBLIC")
+conn.cursor().execute(f"CREATE WAREHOUSE IF NOT EXISTS {sf_warehouse} \
                       WITH WAREHOUSE_SIZE = 'XSMALL' \
                       AUTO_SUSPEND = 60 \
                       AUTO_RESUME = TRUE \
                       INITIALLY_SUSPENDED = TRUE")
 conn.cursor().execute(f"CREATE SECRET kaggle_central_auth \
                       TYPE = PASSWORD \
-                      USERNAME = #{kaggle_user} \
-                      PASSWORD = #{kaggle_token}")
+                      USERNAME = {kaggle_user} \
+                      PASSWORD = {kaggle_token}")
 
 # Creating all dependencies for Flask API ===================================================
 # conn.cursor().execute(f"")
 # Creating a role for Flask API setup with read access to Kaggle data schema
 conn.cursor().execute("USE ROLE ACCOUNTADMIN")
-conn.cursor().execute(f"USE DATABASE #{sf_database}")
+conn.cursor().execute(f"USE DATABASE {sf_database}")
 conn.cursor().execute("CREATE OR REPLACE ROLE DATA_API_ROLE")
 conn.cursor().execute(f"GRANT USAGE ON WAREHOUSE #{sf_warehouse} TO ROLE DATA_API_ROLE")
 conn.cursor().execute("GRANT ROLE DATA_API_ROLE TO ROLE ACCOUNTADMIN")
