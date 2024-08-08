@@ -4,7 +4,7 @@
 USE SCHEMA {{db_name}}.{{schema_name}};
 CREATE OR REPLACE DYNAMIC TABLE dynamic_videogamesales
     LAG='DOWNSTREAM' 
-    WAREHOUSE=XSMALL_WH
+    WAREHOUSE={{sf_warehouse}}
 AS
 SELECT 
     a."Platform" as platform,
