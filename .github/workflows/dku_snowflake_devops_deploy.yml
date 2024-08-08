@@ -24,9 +24,7 @@ jobs:
       SF_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
       SF_DATABASE: ${{ secrets.SF_DATABASE }}
       SNOWFLAKE_PASSWORD: ${{ secrets.SF_PASSWORD }}
-      TARGET_DB_NAME: ${{ env.TARGET_DB }}
-      TARGET_SCHEMA_NAME: ${{ env.TARGET_SCHEMA }}
-      SCHEMACHANGE_TABLE: ${{ env.SCHEMACHANGE_HISTORY_NAME }}
+
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -56,10 +54,15 @@ jobs:
 
       - name: Create vars JSON
         id: create_vars_json
+        env:
+          TARGET_DB_NAME: ${{ env.TARGET_DB }}
+          TARGET_SCHEMA_NAME: ${{ env.TARGET_SCHEMA }}
         run: |
           echo "::set-output name=vars_json::'{\"db_name\":\"$TARGET_DB_NAME\", \"schema_name\":\"$TARGET_SCHEMA_NAME\"}'"
 
       - name: Run schemachange
+        env: 
+          SCHEMACHANGE_TABLE: ${{ env.SCHEMACHANGE_HISTORY_NAME }}
         run: |
           echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
           python --version
