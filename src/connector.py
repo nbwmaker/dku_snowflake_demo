@@ -1,6 +1,5 @@
 import datetime
 import os
-# import sys #REMOVE
 
 import snowflake.connector
 from snowflake.connector import DictCursor
@@ -62,13 +61,8 @@ def company_yearly_sales(company_name, year):
         AND YEAR = {year}
     '''
     sql = sql_string.format(year=year_int, platform_list = company_to_platform_map[company_name])
-    # print("sanity check", file=sys.stderr)
-    # print(sql, file=sys.stderr)
     try:
         res = conn.cursor(DictCursor).execute(sql)
-        res_to_return = res.fetchall()
-        # print("sanity check2", file=sys.stderr)
-        # print(res_to_return, file=sys.stderr)
-        return make_response(jsonify(res_to_return))
+        return make_response(jsonify(res.fetchall()))
     except:
         abort(500, "Error reading from Snowflake.")

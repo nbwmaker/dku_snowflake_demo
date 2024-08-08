@@ -2,7 +2,7 @@
 <html>
     <body>
 
-    <p>Simple API tester</p>
+    <p>API Tester for Dataiku // Snowflake Demo</p>
 
     <form id="frm1">
         <table style="width:500px; border:1px solid black">
@@ -54,7 +54,6 @@
             fetch(apiurl)
                 .then(response => response.json())
                 .then(data => document.getElementById("output").innerHTML = "<pre>" + JSON.stringify(data, null, "  ") + "</pre>")
-                // .then(data => document.getElementById("output").innerHTML = "<pre>" + data + "</pre>")
                 .catch(error => document.getElementById("output").innerHTML = "There was an error: " + error)
         }
 

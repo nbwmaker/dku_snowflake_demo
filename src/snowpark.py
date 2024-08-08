@@ -1,6 +1,5 @@
 import datetime
 import os
-import sys #REMOVE
 
 from flask import Blueprint, request, abort, make_response, jsonify
 
@@ -56,15 +55,9 @@ def company_yearly_sales(company_name, year):
     except:
         abort(400, "Invalid year.")
     try:
-        df = session.table('KAGGLE_DATASETS.videogamesales')
-        # print("session", file=sys.stderr)
-        # print(df.show(), file=sys.stderr)
-        df = df.filter(f.col('PLATFORM').in_(company_to_platform_map[company_name]))
-        # print("platfilter", file=sys.stderr)
-        # print(df.show(), file=sys.stderr)
-        df = df.filter(f.col('YEAR') == year_int)
-        # print("yearfilter", file=sys.stderr)
-        # print(df.show(), file=sys.stderr)
+        df = session.table('KAGGLE_DATASETS.videogamesales') \
+            .filter(f.col('PLATFORM').in_(company_to_platform_map[company_name])) \
+            .filter(f.col('YEAR') == year_int)
         return make_response(jsonify([x.as_dict() for x in df.to_local_iterator()]))
     except:
         abort(500, "Error reading from Snowflake.")
