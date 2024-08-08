@@ -17,6 +17,17 @@ jobs:
   deploy-snowflake-changes-job:
     runs-on: ubuntu-latest
 
+    env:
+      SF_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
+      SF_USERNAME: ${{ secrets.SF_USERNAME }}
+      SF_ROLE: ${{ secrets.SF_ROLE }}
+      SF_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
+      SF_DATABASE: ${{ secrets.SF_DATABASE }}
+      SNOWFLAKE_PASSWORD: ${{ secrets.SF_PASSWORD }}
+      TARGET_DB_NAME: ${{ env.TARGET_DB }}
+      TARGET_SCHEMA_NAME: ${{ env.TARGET_SCHEMA }}
+      SCHEMACHANGE_TABLE: ${{ env.SCHEMACHANGE_HISTORY_NAME }}
+
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout repository
@@ -49,16 +60,6 @@ jobs:
           echo "::set-output name=vars_json::'{\"db_name\":\"$TARGET_DB_NAME\", \"schema_name\":\"$TARGET_SCHEMA_NAME\"}'"
 
       - name: Run schemachange
-        env:
-          SF_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
-          SF_USERNAME: ${{ secrets.SF_USERNAME }}
-          SF_ROLE: ${{ secrets.SF_ROLE }}
-          SF_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
-          SF_DATABASE: ${{ secrets.SF_DATABASE }}
-          SNOWFLAKE_PASSWORD: ${{ secrets.SF_PASSWORD }}
-          TARGET_DB_NAME: ${{ env.TARGET_DB }}
-          TARGET_SCHEMA_NAME: ${{ env.TARGET_SCHEMA }}
-          SCHEMACHANGE_TABLE: ${{ env.SCHEMACHANGE_HISTORY_NAME }}
         run: |
           echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
           python --version
@@ -66,5 +67,5 @@ jobs:
           pip install schemachange
           
           echo "Step 2: Running schemachange"
-          schemachange -f $GITHUB_WORKSPACE/migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.$SCHEMACHANGE_TABLE --create-change-history-table --vars ${{ steps.create_vars_json.outputs.vars_json}}
+          schemachange -f $GITHUB_WORKSPACE/migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.$SCHEMACHANGE_TABLE --create-change-history-table --vars ${{ steps.create_vars_json.outputs.vars_json }}
         # --vars '{"db_name": "DKU_DEMO_DEV", "schema_name": "KAGGLE_DATASETS"}'
