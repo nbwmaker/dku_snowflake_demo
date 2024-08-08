@@ -54,7 +54,7 @@ conn.cursor().execute(f"CREATE SECRET kaggle_central_auth \
 conn.cursor().execute("USE ROLE ACCOUNTADMIN")
 conn.cursor().execute(f"USE DATABASE {sf_database}")
 conn.cursor().execute("CREATE OR REPLACE ROLE DATA_API_ROLE")
-conn.cursor().execute(f"GRANT USAGE ON WAREHOUSE #{sf_warehouse} TO ROLE DATA_API_ROLE")
+conn.cursor().execute(f"GRANT USAGE ON WAREHOUSE {sf_warehouse} TO ROLE DATA_API_ROLE")
 conn.cursor().execute("GRANT ROLE DATA_API_ROLE TO ROLE ACCOUNTADMIN")
 
 # Creating database for image registry
