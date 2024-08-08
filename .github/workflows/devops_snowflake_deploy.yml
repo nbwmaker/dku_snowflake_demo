@@ -2,13 +2,13 @@ name: devops_snowflake_deploy
 
 # Controls when the action will run. 
 on:
-  # push:
-  #   branches:
-  #     - dev
-  #     - staging
-  #     - prod
-  #   paths:
-  #     - 'migrations/**'
+  push:
+    branches:
+      - dev
+      - staging
+      - prod
+    paths:
+      - 'migrations/**'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -71,4 +71,3 @@ jobs:
           
           echo "Step 2: Running schemachange"
           schemachange -f $GITHUB_WORKSPACE/migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.$SCHEMACHANGE_TABLE --create-change-history-table --vars ${{ steps.create_vars_json.outputs.vars_json }}
-        # --vars '{"db_name": "DKU_DEMO_DEV", "schema_name": "KAGGLE_DATASETS"}'
