@@ -1,4 +1,5 @@
 USE ROLE DATA_API_ROLE;
+USE DATABASE API;
 CREATE SERVICE API.PUBLIC.API
  IN COMPUTE POOL API
  FROM SPECIFICATION  
@@ -10,7 +11,7 @@ spec:
     env:
         SNOWFLAKE_ACCOUNT: {{sf_account}}
         SNOWFLAKE_USER: {{sf_user}}
-        SNOWFLAKE_PASSWORD: {{sf_password}}
+        SNOWFLAKE_PASSWORD: {{snowflake_password}}
         SNOWFLAKE_WAREHOUSE: {{sf_warehouse}}
         SNOWFLAKE_DATABASE: {{db_name}}
         SNOWFLAKE_SCHEMA: {{schema_name}}
