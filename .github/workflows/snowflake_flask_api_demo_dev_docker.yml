@@ -5,6 +5,8 @@ on:
     branches:
       - dev
       - flask_build
+    paths:
+      - 'src/**'
 
 jobs:
   build-and-deploy:
