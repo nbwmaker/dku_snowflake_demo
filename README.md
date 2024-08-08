@@ -22,14 +22,13 @@ This workflow should take less than a minute to execute.
 
 
 ## Workflows
-**Steps 1-4 are achieved through the `devops_snowflake_deploy` GitHub Action workflow. This action monitors  branches `dev`, `staging`, and `main` within the repository on the `migrations/**` path. **
+__Steps 1-4 are achieved through the `devops_snowflake_deploy` GitHub Action workflow. This action monitors  branches `dev`, `staging`, and `main` within the repository on the `migrations/**` path.__
 
 This workflow checks to see which branch the workflow is executing from and establishes an uniquely named `db_name` to schemachange, to go along with the `schema_name` dedicated to the Kaggle dataset we will be pulling into the schema with the API. This enables reuse of the versioned scripts within `migrations/**`. A unique table is also specified for schemachange's history table, so that they do not collide when determining the latest change applied. 
 
 This workflow should take less than two minutes to execute.
 
-**Step 5 is managed with `build_and_deploy_flask_docker_img` GitHub Action workflow. 
-**
+__Step 5 is managed with `build_and_deploy_flask_docker_img` GitHub Action workflow.__
 This action builds the Flask app contained within `src/**` leveraging the `Dockerfile` in the root of the repository. The image is then pushed to the Snowflake image repository that was built during the `base_env_setup` workflow. After the image push is completed, the workflow uses schemachange to apply `utility/A__bind_latest_flask_api.sql` against our Snowflake account, which binds a local service endpoint for the API. 
 
 This workflow takes about seven minutes to execute.
