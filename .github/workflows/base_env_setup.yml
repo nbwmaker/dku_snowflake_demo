@@ -42,4 +42,4 @@ jobs:
           pip install schemachange
           
           echo "Step 2: Running schemachange"
-          schemachange -f $GITHUB_WORKSPACE/base_setup -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE --vars '{"central_db_name": "CENTRAL_DB", "sf_warehouse": $SF_WAREHOUSE, "kaggle_user": $KAGGLE_USER, "kaggle_token": $KAGGLE_TOKEN}'
+          schemachange -f $GITHUB_WORKSPACE/base_setup -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE --vars '{"central_db_name": "CENTRAL_DB", "sf_warehouse": "$SF_WAREHOUSE", "kaggle_user": "$KAGGLE_USER", "kaggle_token": "$KAGGLE_TOKEN"}'
