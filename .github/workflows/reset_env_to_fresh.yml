@@ -1,4 +1,4 @@
-name: base_env_setup
+name: reset_env_to_fresh
 
 # Controls when the action will run. 
 on:
