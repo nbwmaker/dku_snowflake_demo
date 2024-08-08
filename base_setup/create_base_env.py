@@ -45,8 +45,8 @@ conn.cursor().execute(f"CREATE WAREHOUSE IF NOT EXISTS {sf_warehouse} \
                       INITIALLY_SUSPENDED = TRUE")
 conn.cursor().execute(f"CREATE SECRET kaggle_central_auth \
                       TYPE = PASSWORD \
-                      USERNAME = {kaggle_user} \
-                      PASSWORD = {kaggle_token}")
+                      USERNAME = \'{kaggle_user}\' \
+                      PASSWORD = \'{kaggle_token}\'")
 
 # Creating all dependencies for Flask API ===================================================
 # conn.cursor().execute(f"")
