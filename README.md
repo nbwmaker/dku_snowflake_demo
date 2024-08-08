@@ -22,9 +22,8 @@ This workflow should take less than a minute to execute.
 
 
 ## Workflows
-__Steps 1-4 are achieved through the `devops_snowflake_deploy` GitHub Action workflow. This action monitors  branches `dev`, `staging`, and `main` within the repository on the `migrations/**` path.__
-
-This workflow checks to see which branch the workflow is executing from and establishes an uniquely named `db_name` to schemachange, to go along with the `schema_name` dedicated to the Kaggle dataset we will be pulling into the schema with the API. This enables reuse of the versioned scripts within `migrations/**`. A unique table is also specified for schemachange's history table, so that they do not collide when determining the latest change applied. 
+__Steps 1-4 are achieved through the `devops_snowflake_deploy` GitHub Action workflow.__
+This action monitors  branches `dev`, `staging`, and `main` within the repository on the `migrations/**` path. This workflow checks to see which branch the workflow is executing from and establishes an uniquely named `db_name` to schemachange, to go along with the `schema_name` dedicated to the Kaggle dataset we will be pulling into the schema with the API. This enables reuse of the versioned scripts within `migrations/**`. A unique table is also specified for schemachange's history table, so that they do not collide when determining the latest change applied. 
 
 This workflow should take less than two minutes to execute.
 
