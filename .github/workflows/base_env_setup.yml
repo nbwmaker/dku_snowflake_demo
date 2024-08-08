@@ -38,7 +38,7 @@ jobs:
           SNOWFLAKE_PASSWORD: ${{ secrets.SF_PASSWORD }}
           KAGGLE_USER: ${{ secrets.SF_KAGGLE_USER }}
           KAGGLE_TOKEN: ${{ secrets.SF_KAGGLE_TOKEN }}
-        run: python create_base_env.py
+        run: python $GITHUB_WORKSPACE/base_setup/create_base_env.py
 
       # - name: Create vars JSON
       #   id: create_vars_json
