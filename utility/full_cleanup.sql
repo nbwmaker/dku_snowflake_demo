@@ -12,6 +12,7 @@ DROP DATABASE DKU_DEMO_PROD;
 DROP TABLE CENTRAL_DB.SCHEMACHANGE.PROD_CHANGE_HISTORY;
 
 -- Kaggle RAP Demo Roles ===================================================================
+DROP ROLE kaggle_role;
 DROP ROLE nintendo;
 DROP ROLE sony;
 DROP ROLE microsoft;
