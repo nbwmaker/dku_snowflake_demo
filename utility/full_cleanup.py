@@ -31,7 +31,7 @@ def connect() -> snowflake.connector.SnowflakeConnection:
 conn = connect()
 
 # conn.cursor().execute("")
-conn.cursor().execute("USE ACCOUNTADMIN")
+conn.cursor().execute("USE ROLE ACCOUNTADMIN")
 
 # Kaggle Databases ===================================================================
 # reset demo env
