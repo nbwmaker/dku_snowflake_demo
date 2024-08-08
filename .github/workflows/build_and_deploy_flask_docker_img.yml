@@ -1,0 +1,41 @@
+name: build_and_deploy_flask_docker_img
+
+on:
+  push:
+    branches:
+      - dev
+      - flask_build
+    paths:
+      - 'src/**'
+    
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+        SF_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
+        SF_USERNAME: ${{ secrets.SF_USERNAME }}
+        SF_IMG_REPO: ${{ secrets.SF_IMG_REPO }}
+        SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
+        IMG_NAME: dataapi
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Log in to Snowflake Image Repository
+      run: |
+        docker login $SF_IMG_REPO --username $SF_USERNAME --password $SF_PASSWORD
+
+    - name: Build the Docker image
+      run: |
+        docker build -t $SF_IMG_REPO/$IMG_NAME:latest .
+
+    - name: Push the Docker image
+      run: |
+        docker push $SF_IMG_REPO/$IMG_NAME:latest

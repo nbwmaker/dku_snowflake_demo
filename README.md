@@ -28,6 +28,8 @@ The GitHub Actions require a number of secrets to be setup:
 * SF_ROLE - Snowflake role to use for deployment, ACCOUNTADMIN was used for this demo
 * SF_USERNAME - Snowflake user with privilege to use the provided Snowflake account, database, warehouse, and role
 * SF_PASSWORD - Snowflake user's authentication
+* SF_KAGGLE_USERNAME - Kaggle username for which you have API access
+* SF_KAGGLE_TOKEN - Kaggle API access token to pair with the Kaggle user
 
 For expanding the deployment of the Flask API, an SF_IMG_REPO secret would be needed for directing the docker image push.
 
@@ -50,6 +52,7 @@ Besides plenty of general use of [Snowflake's documentation](https://docs.snowfl
 
 ### GitHub Actions & schemachange
 * [DevOps: Database Change Management with schemachange and GitHub](https://quickstarts.snowflake.com/guide/devops_dcm_schemachange_github/#0)
+* [schemachange GitHub](https://github.com/Snowflake-Labs/schemachange)
 
 ### Flask API
 * [Build a Custom API in Python and Flask](https://quickstarts.snowflake.com/guide/build_a_custom_api_in_python/index.html?index=..%2F..index#0)
