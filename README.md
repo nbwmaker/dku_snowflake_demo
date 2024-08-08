@@ -32,6 +32,7 @@ The GitHub Actions require a number of secrets to be setup:
 For expanding the deployment of the Flask API, an SF_IMG_REPO secret would be needed for directing the docker image push.
 
 ## To-Do/Optimize
+* Simplify workflows to be reused across branches
 * Improve least privilege / access management within the Snowflake instance.
 * More flexible Kaggle API file retrieval (csv, zip, json)
 * GitHub file staging
