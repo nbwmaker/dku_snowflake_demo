@@ -57,8 +57,8 @@ def company_yearly_sales(company_name, year):
     sql_string = '''
         SELECT *
         FROM kaggle_datasets.videogamesales
-        WHERE PLATFORM IN {platform_list}
-        AND YEAR = {year}
+        WHERE "Platform" IN {platform_list}
+        AND "Year" = {year}
     '''
     sql = sql_string.format(year=year_int, platform_list = company_to_platform_map[company_name])
     try:
