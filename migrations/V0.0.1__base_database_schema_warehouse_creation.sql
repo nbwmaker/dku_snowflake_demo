@@ -1,4 +1,4 @@
---Creating the base database, schema, and warehouse environment if they do not already exist
+-- Creating the base database, schema, and warehouse environment if they do not already exist
 CREATE DATABASE IF NOT EXISTS {{db_name}};
 CREATE SCHEMA IF NOT EXISTS {{db_name}}.{{schema_name}};
 USE SCHEMA {{db_name}}.{{schema_name}};

@@ -1,4 +1,6 @@
---creating a dynamic table on the videogamesales dataset we created with load_kaggle_dataset
+-- creating a dynamic table on the videogamesales dataset we created with load_kaggle_dataset
+-- the aggregation applied SUMs GLOBAL_SALES and LISTAGG the YEARs available by platform
+-- this gives a lifespawn view of a platforms sale performance
 USE SCHEMA {{db_name}}.{{schema_name}};
 CREATE OR REPLACE DYNAMIC TABLE dynamic_videogamesales
     LAG='DOWNSTREAM' 

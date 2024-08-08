@@ -1,4 +1,7 @@
---Creating Python stored procedure for Kaggle dataset ETL
+-- Creating Python stored procedure for Kaggle dataset ETL
+-- this procedure connects to the Kaggle API searching for the 
+-- dataset by owner name and dataset name. It takes an optional 
+-- transform parameter allows for transformation of the data in flight
 USE SCHEMA {{db_name}}.{{schema_name}};
 
 CREATE OR REPLACE PROCEDURE load_kaggle_dataset(dataset_owner STRING, dataset_name STRING, transform OBJECT)
@@ -23,6 +26,8 @@ def load_kaggle_dataset(session, dataset_owner: str, dataset_name: str, transfor
     '''
     Requests to download a dataset directly from Kaggle, performs optional transformations
     on the resulting DataFrame, and loads the data into a raw Snowflake table.
+
+    NOTE: The returned data is expected to be initially in zip format for the purpose of this demo
 
     Args:
         dataset_owner (str): Kaggle username of dataset owner
