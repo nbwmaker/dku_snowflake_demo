@@ -19,6 +19,12 @@ jobs:
         SF_USERNAME: ${{ secrets.SF_USERNAME }}
         SF_IMG_REPO: ${{ secrets.SF_IMG_REPO }}
         SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
+        SF_ROLE: ${{ secrets.SF_ROLE }}
+        SF_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
+        SF_DATABASE: ${{ secrets.SF_DATABASE }}
+        SNOWFLAKE_PASSWORD: ${{ secrets.SF_PASSWORD }}
+        TARGET_DB_NAME: DKU_DEMO_DEV
+        TARGET_SCHEMA_NAME: KAGGLE_DATASETS
         IMG_NAME: dataapi
 
     steps:
@@ -39,3 +45,24 @@ jobs:
     - name: Push the Docker image
       run: |
         docker push $SF_IMG_REPO/$IMG_NAME:latest
+
+    - name: Use Python 3.8.x
+      uses: actions/setup-python@v2.2.1
+      with:
+        python-version: 3.8.x
+
+    - name: Create vars JSON
+      id: create_vars_json
+      run: |
+        echo "::set-output name=vars_json::'{\"sf_account\":\"$SF_ACCOUNT\", \"sf_user\":\"$SF_USERNAME\", \"snowflake_password\":\"$SF_PASSWORD\", \"sf_warehouse\":\"$SF_WAREHOUSE\", \"db_name\":\"$TARGET_DB_NAME\", \"schema_name\":\"$TARGET_SCHEMA_NAME\"}'"
+
+    - name: Bind latest flask API to service endpoint with schemachange
+      run: |
+        echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+        python --version
+        echo "Step 1: Installing schemachange"
+        pip install schemachange
+        
+        echo "Step 2: Running schemachange"
+        schemachange -f $GITHUB_WORKSPACE/utility -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.DEV_CHANGE_HISTORY --create-change-history-table --vars ${{ steps.create_vars_json.outputs.vars_json}}
+      # --vars '{"db_name": "DKU_DEMO_DEV", "schema_name": "KAGGLE_DATASETS"}'
