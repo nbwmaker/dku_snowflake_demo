@@ -72,7 +72,7 @@ conn.cursor().execute("USE ROLE ACCOUNTADMIN")
 conn.cursor().execute("CREATE COMPUTE POOL API \
                       MIN_NODES = 1 \
                       MAX_NODES = 5 \
-                      INSTANCE_FAMILY = PU_X64_XS")
+                      INSTANCE_FAMILY = CPU_X64_XS")
 conn.cursor().execute("GRANT USAGE ON COMPUTE POOL API TO ROLE DATA_API_ROLE")
 conn.cursor().execute("GRANT MONITOR ON COMPUTE POOL API TO ROLE DATA_API_ROLE")
 
