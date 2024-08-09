@@ -21,9 +21,6 @@ def connect() -> snowflake.connector.SnowflakeConnection:
             'account': os.getenv('SF_ACCOUNT'),
             'user': os.getenv('SF_USERNAME'),
             'password': os.getenv('SNOWFLAKE_PASSWORD'),
-            # 'warehouse': os.getenv('SNOWFLAKE_WAREHOUSE'),
-            # 'database': os.getenv('SNOWFLAKE_DATABASE'),
-            # 'schema': os.getenv('SNOWFLAKE_SCHEMA'),
             'client_session_keep_alive': True
         }
     return snowflake.connector.connect(**creds)
@@ -49,7 +46,6 @@ conn.cursor().execute(f"CREATE SECRET kaggle_central_auth \
                       PASSWORD = \'{kaggle_token}\'")
 
 # Creating all dependencies for Flask API ===================================================
-# conn.cursor().execute(f"")
 # Creating a role for Flask API setup with read access to Kaggle data schema
 conn.cursor().execute("USE ROLE ACCOUNTADMIN")
 conn.cursor().execute(f"USE DATABASE {sf_database}")

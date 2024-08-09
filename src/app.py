@@ -13,7 +13,7 @@ app.register_blueprint(snowpark, url_prefix='/snowpark')
 
 @app.route("/")
 def default():
-    return make_response(jsonify(result='Nothing to see here'))
+    return make_response(jsonify(result='API Live, but nothing at this URL'))
 
 @app.route("/test")
 def tester():

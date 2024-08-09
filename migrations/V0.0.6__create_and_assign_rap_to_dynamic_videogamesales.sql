@@ -1,6 +1,8 @@
+-- Creating and adding a row access policy for dynamic_videogamesales
+-- this policy will allow nintendo, microsoft, and sony access to only
+-- records of platforms they own
 USE SCHEMA {{db_name}}.{{schema_name}};
 
--- Creating and adding a row access policy for dynamic_videogamesales
 CREATE OR REPLACE ROW ACCESS POLICY videogame_company_restriction
 AS (platform varchar) RETURNS BOOLEAN ->
     CASE

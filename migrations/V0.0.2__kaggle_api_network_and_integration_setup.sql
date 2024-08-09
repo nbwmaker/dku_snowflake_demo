@@ -9,5 +9,5 @@ CREATE OR REPLACE NETWORK RULE kaggle_api_network_rule
 -- public schema to avoid committing credentials to repo
 CREATE OR REPLACE EXTERNAL ACCESS INTEGRATION kaggle_api_access_integration
     ALLOWED_NETWORK_RULES = (kaggle_api_network_rule)
-    ALLOWED_AUTHENTICATION_SECRETS = (central_db.public.kaggle_central_auth)
+    ALLOWED_AUTHENTICATION_SECRETS = ({{sf_database}}.public.kaggle_central_auth)
     ENABLED = TRUE;

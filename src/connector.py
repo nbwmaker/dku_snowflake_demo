@@ -6,7 +6,6 @@ from snowflake.connector import DictCursor
 from flask import Blueprint, request, abort, jsonify, make_response
 
 # Make the Snowflake connection
-
 def connect() -> snowflake.connector.SnowflakeConnection:
     if os.path.isfile("/snowflake/session/token"):
         creds = {

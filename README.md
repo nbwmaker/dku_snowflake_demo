@@ -1,57 +1,66 @@
 # Data Engineer Technical Assessment
-For this assessment, I have created Github Actions schemachange migration scripts to create and execute the following steps:
-
+Demonstrating Snowflake, GitHub Actions, SQL, and python capabilities.
 
 ## Solution built
 1. Create a Snowflake python stored procedure that accesses the external Kaggle API and
 receives the [videogamesales](https://www.kaggle.com/datasets/gregorut/videogamesales) dataset back to Snowflake
-    1. This python stored procedure performs an aggregation prior to loading to a Snowflake table
+    1. This python stored procedure performs a sum aggregation prior to loading to a Snowflake table to adjust the context from an individual video game title to a platform level.
     2. Then loads the data to a Snowflake raw table `videogamesales`
 2. Create a Dynamic Table `dynamic_videogamesales` in Snowflake and applies a SUM on GLOBAL_SALES and LISTAGG on YEAR for each PLATFORM to the raw table `videogamesales`
 3. Create a Row Access Policy and apply a dynamic filter to the Dynamic Table tied to fictious ROLEs for Microsoft, Nintendo, and Sony. The Row Access Policy only allows these companies to view records for their own platforms. \(e.g. "microsoft" : \('PC', 'XB', 'X360', 'XOne'\)\)
-4. Leveraging Github Acitons and schemachange, this all is deployed to the Snowflake account. The only requirements of the Snowflake environment is a database that contains the Kaggle authentication secret.
+4. Leveraging Github Acitons and schemachange, this all is deployed to the Snowflake account.
 5. **Bonus!** Create a local API endpoint using a docker contained Flaskapp to read data from `videogamesales` in Snowflake and return it in the HTTP response via JSON format. The service in Snowflake also provides an endpoint of `<api-endpoint>/test` which provides a simple HTML tester for the API.
 
 
-## Pre-Work
-Before we can execute schemachange for steps 1-4, we need to create a database to house the schemachange history tables. We'll also establish a warehouse for use in all of the schemachange scripts. In addition to this, we'll also setup a database to house our API and image repository, so that we'll be able to build and push our Flask API image to our Snowflake account.
+## Base Environment Pre-Work
+Before we can execute schemachange for steps 1-4, we need to create a database to house the schemachange history tables. We'll also establish a warehouse for use in all of the schemachange scripts. In addition to this, we'll create a database and image repository to house our API. This enables us to be able to build and push our Flask API image to our Snowflake account.
 
 This is all handled via GitHub Action workflow `base_env_setup` which executes `base_setup/create_base_env.py`. 
 
-This workflow should take less than a minute to execute.
+_This workflow should take less than a minute to execute._
 
 
 ## Workflows
-**Steps 1-4 are achieved through the `devops_snowflake_deploy` GitHub Action workflow. This action monitors  branches `dev`, `staging`, and `main` within the repository on the `migrations/**` path. **
+__Steps 1-4 are achieved through the `devops_snowflake_deploy` GitHub Action workflow.__
+This action monitors repository branches `dev`, `staging`, and `main` within the `migrations/**` path. The workflow checks to see which branch is executing and determines which values to pass for target database name, target schema name, and target schemachange history table name. This enables reuse of the versioned scripts within `migrations/**`.
 
-This workflow checks to see which branch the workflow is executing from and establishes an uniquely named `db_name` to schemachange, to go along with the `schema_name` dedicated to the Kaggle dataset we will be pulling into the schema with the API. This enables reuse of the versioned scripts within `migrations/**`. A unique table is also specified for schemachange's history table, so that they do not collide when determining the latest change applied. 
+_This workflow should take less than two minutes to execute._
 
-This workflow should take less than two minutes to execute.
-
-**Step 5 is managed with `build_and_deploy_flask_docker_img` GitHub Action workflow. 
-**
+__Step 5 is managed with `build_and_deploy_flask_docker_img` GitHub Action workflow.__
 This action builds the Flask app contained within `src/**` leveraging the `Dockerfile` in the root of the repository. The image is then pushed to the Snowflake image repository that was built during the `base_env_setup` workflow. After the image push is completed, the workflow uses schemachange to apply `utility/A__bind_latest_flask_api.sql` against our Snowflake account, which binds a local service endpoint for the API. 
 
-This workflow takes about seven minutes to execute.
+_This workflow takes about seven minutes to execute._
 
 
 ## Dependencies
-Environment setup that is currently a manual effort is contained within the `pre-work/**` directory.
+The GitHub Actions require a number of secrets to be set up:
+* `SF_ACCOUNT` - Snowflake account URL, in a format such as `ex99999.us-east-2.aws`
+* `SF_DATABASE` - Snowflake database to use for deployment
+* `SF_WAREHOUSE` - Snowflake warehouse to use for deployment
+* `SF_ROLE` - Snowflake role to use for deployment, ACCOUNTADMIN was used for this demo
+* `SF_USERNAME` - Snowflake user with privilege to use the provided Snowflake account, database, warehouse, and role
+* `SF_PASSWORD` - Snowflake user's authentication
+* `SF_KAGGLE_USERNAME` - Kaggle username for which you have API access
+* `SF_KAGGLE_TOKEN` - Kaggle API access token to pair with the Kaggle user
+* `SF_IMG_REPO` - A URL Endpoint for Snowflake's image repository. This is created in the scripts, but is deterministic so it can be provided beforehand if you know the naming of the objects where it will live.
 
-The GitHub Actions require a number of secrets to be setup:
-* SF_ACCOUNT - Snowflake account URL, in a format such as `ex99999.us-east-2.aws`
-* SF_DATABASE - Snowflake database to use for deployment
-* SF_WAREHOUSE - Snowflake warehouse to use for deployment
-* SF_ROLE - Snowflake role to use for deployment, ACCOUNTADMIN was used for this demo
-* SF_USERNAME - Snowflake user with privilege to use the provided Snowflake account, database, warehouse, and role
-* SF_PASSWORD - Snowflake user's authentication
-* SF_KAGGLE_USERNAME - Kaggle username for which you have API access
-* SF_KAGGLE_TOKEN - Kaggle API access token to pair with the Kaggle user
-* SF_IMG_REPO - A URL Endpoint for Snowflake's image repository. This is created in the scripts, but is deterministic so it can be provided beforehand if you know the naming of the objects where it will live.
 
+## Execution
+For a full demonstration execute the GitHub Action workflows in this order:
+1. `base_env_setup`
+2. `build_and_deploy_flask_docker_img`
+3. `devops_snowflake_deploy`
+
+At this point, you should be able to use the code provided in `utility/demo_walkthrough.sql` within Snowflake's SQL Workbook to explore the environment. 
+
+Within that code is `SHOW ENDPOINTS IN SERVICE API;` which will provide you with the endpoint to access the Flask API. Navigating to `<api-endpoint-url>/test` brings you to an HTML page to test the Flask API leveraging the Snowflake SQL Connector or Snowpark Python Connector against Kaggle data.
+
+Once finished, run `reset_env_to_fresh`.
 
 ## To-Do/Optimize
 * Improve least privilege / access management within the Snowflake instance.
+* Normalize column names to non-case sensitive within load procedure
+* Provide naming option or auto_naming of column after aggregation in load procedure
 * More flexible Kaggle API file retrieval (csv, zip, json)
 * GitHub file staging
 * Row Access Policy mapping table instead of hardcoded mappings

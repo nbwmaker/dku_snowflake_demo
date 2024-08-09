@@ -36,6 +36,7 @@ jobs:
         with:
           python-version: 3.8.x
 
+      # Reads the repository branch and sets env accordingly for deployment
       - name: Set branch specific environment variables
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
@@ -52,14 +53,18 @@ jobs:
             echo "SCHEMACHANGE_HISTORY_NAME=STAGING_CHANGE_HISTORY" >> $GITHUB_ENV
           fi
 
-      - name: Create vars JSON
+      # schemachange expects a stringified JSON for --vars parameter
+      # it did not play nicely with env variable syntax, so we construct
+      # the json
+      - name: Create vars JSON for schemachange
         id: create_vars_json
         env:
           TARGET_DB_NAME: ${{ env.TARGET_DB }}
           TARGET_SCHEMA_NAME: ${{ env.TARGET_SCHEMA }}
         run: |
-          echo "::set-output name=vars_json::'{\"sf_warehouse\":\"$SF_WAREHOUSE\", \"db_name\":\"$TARGET_DB_NAME\", \"schema_name\":\"$TARGET_SCHEMA_NAME\"}'"
+          echo "::set-output name=vars_json::'{\"sf_username\":\"$SF_USERNAME\", \"sf_warehouse\":\"$SF_WAREHOUSE\", \"db_name\":\"$TARGET_DB_NAME\", \"schema_name\":\"$TARGET_SCHEMA_NAME\"}'"
 
+      # execute schemachange for /migrations/**
       - name: Run schemachange
         env: 
           SCHEMACHANGE_TABLE: ${{ env.SCHEMACHANGE_HISTORY_NAME }}
